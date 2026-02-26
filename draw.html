@@ -8,11 +8,6 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --from: #6b3535;
-      --to:   #1a0c0c;
-    }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100dvh;
@@ -361,12 +356,14 @@
         angle:        60,
         spread:       55,
         origin:       { x: 0, y: 0.6 },
+        colors:       ['#f5c0b0', '#e89080', '#f0d0a0', '#e8a0a0', '#fde8d8'],
       }), 400);
       setTimeout(() => confetti({
         particleCount: 80,
         angle:        120,
         spread:       55,
         origin:       { x: 1, y: 0.6 },
+        colors:       ['#f5c0b0', '#e89080', '#f0d0a0', '#e8a0a0', '#fde8d8'],
       }), 600);
     }
   }
