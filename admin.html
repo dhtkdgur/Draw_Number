@@ -327,7 +327,7 @@
       <!-- QR 섹션 -->
       <div class="qr-box">
         <div class="qr-frame">
-          <canvas id="qr-canvas"></canvas>
+          <img id="qr-img" width="200" height="200" alt="QR Code" style="display:block;">
         </div>
         <div class="qr-url-text" id="draw-url-text"></div>
         <div class="row">
@@ -348,8 +348,6 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- QR code library -->
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script>
   let pollTimer   = null;
   let drawUrl     = '';
@@ -486,9 +484,9 @@
   function buildQR() {
     drawUrl = window.location.origin + '/draw.html';
     set('draw-url-text', drawUrl);
-    const canvas = document.getElementById('qr-canvas');
-    QRCode.toCanvas(canvas, drawUrl, { width: 200, margin: 1, color: { dark: '#000', light: '#fff' } },
-      err => { if (err) console.error('QR 오류:', err); });
+    const img = document.getElementById('qr-img');
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=10&data='
+              + encodeURIComponent(drawUrl);
   }
 
   /* ─────────────────────────────────────────
