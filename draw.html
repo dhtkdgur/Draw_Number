@@ -235,6 +235,8 @@
   /* ─────────────────────────────────────────
      State machine
   ───────────────────────────────────────── */
+  let totalCount = 999; // 세션에서 받아온 총 인원 수
+
   const STATES = ['loading','draw','drawing','result','closed','nosession'];
 
   function setState(name) {
@@ -278,6 +280,7 @@
         return;
       }
 
+      totalCount = sess.total_count;
       setState('draw');
     } catch (e) {
       console.error(e);
@@ -299,7 +302,7 @@
     const slotEl      = document.getElementById('slot-num');
 
     const animTimer = setInterval(() => {
-      slotEl.textContent = Math.floor(Math.random() * 999) + 1;
+      slotEl.textContent = Math.floor(Math.random() * totalCount) + 1;
     }, 55);
 
     try {
