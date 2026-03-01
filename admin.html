@@ -8,21 +8,38 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:           #582b2b;
-      --card:         #6b3535;
-      --card2:        #7a3d3d;
-      --primary:      #c47878;
-      --primary-glow: rgba(196,120,120,.4);
-      --success:      #c9a060;
-      --danger:       #e06868;
-      --text:         #f5e8e6;
-      --text-dim:     #a88888;
-      --border:       rgba(255,190,180,.1);
-      --radius:       14px;
+      --bg:          #582B2B;
+      --bg2:         #3D1A1A;
+      --bg3:         #4A2323;
+      --text:        #FAECB6;
+      --muted:       #C9A96E;
+      --a:           #F9A822;
+      --b:           #E8874A;
+      --accent:      #C87A40;
+      --border:      #7A4040;
+      --focus-ring:  #F9A822;
+      --a-glow:        rgba(249,168,34,.35);
+      --a-glow-0:      rgba(249,168,34,0);
+      --b-glow:        rgba(232,135,74,.35);
+      --bg3-glass:     rgba(74,35,35,.65);
+      --border-subtle: rgba(122,64,64,.4);
+      --b-subtle:      rgba(232,135,74,.12);
+      --b-border:      rgba(232,135,74,.3);
+      --accent-subtle: rgba(200,122,64,.12);
+      --accent-border: rgba(200,122,64,.3);
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-lg:   20px;
+      --radius-pill: 9999px;
+      --shadow-sm:   0 2px 8px rgba(0,0,0,.25);
+      --shadow-md:   0 4px 16px rgba(0,0,0,.35);
+      --shadow-lg:   0 8px 32px rgba(0,0,0,.45);
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -39,23 +56,23 @@
     .header h1 {
       font-size: 1.9rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #e8a0a0, #c47878);
+      background: linear-gradient(135deg, var(--a), var(--b));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.02em;
     }
     .header p {
-      color: var(--text-dim);
+      color: var(--muted);
       font-size: .85rem;
       margin-top: 4px;
     }
 
     /* ── Card ── */
     .card {
-      background: var(--card);
+      background: var(--bg3);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: var(--radius-lg);
       padding: 24px;
       margin-bottom: 14px;
     }
@@ -64,7 +81,7 @@
       font-weight: 700;
       letter-spacing: .1em;
       text-transform: uppercase;
-      color: var(--text-dim);
+      color: var(--muted);
       margin-bottom: 18px;
     }
 
@@ -72,23 +89,24 @@
     .form-label {
       display: block;
       font-size: .85rem;
-      color: var(--text-dim);
+      color: var(--muted);
       margin-bottom: 8px;
     }
     input[type="number"] {
       width: 100%;
       padding: 13px 16px;
-      background: var(--card2);
+      background: var(--bg2);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       color: var(--text);
       font-size: 1.1rem;
       outline: none;
       transition: border-color .2s;
       margin-bottom: 16px;
     }
-    input[type="number"]:focus { border-color: var(--primary); }
-    input[type="number"]::placeholder { color: var(--text-dim); }
+    input[type="number"]:focus { border-color: var(--focus-ring); }
+    input[type="number"]:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+    input[type="number"]::placeholder { color: var(--muted); }
 
     /* ── Buttons ── */
     .btn {
@@ -99,28 +117,29 @@
       width: 100%;
       padding: 14px 20px;
       border: none;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       font-size: .95rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all .2s;
+      transition: transform 80ms, box-shadow 150ms;
       margin-bottom: 10px;
     }
     .btn:last-child { margin-bottom: 0; }
     .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary), #a05050);
-      color: #fff;
+      background: linear-gradient(135deg, var(--a), var(--accent));
+      color: var(--bg2);
     }
     .btn-primary:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px var(--primary-glow);
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: var(--shadow-md), 0 8px 24px var(--a-glow);
     }
 
     .btn-ghost {
       background: transparent;
-      color: var(--text-dim);
+      color: var(--muted);
       border: 1px solid var(--border);
       padding: 9px 18px;
       width: auto;
@@ -128,18 +147,22 @@
       margin-bottom: 0;
     }
     .btn-ghost:hover:not(:disabled) {
-      border-color: var(--primary);
-      color: var(--primary);
+      transform: translateY(-5px) scale(1.01);
+      border-color: var(--a);
+      color: var(--a);
+      box-shadow: var(--shadow-sm);
     }
 
     .btn-danger {
-      background: rgba(239,68,68,.1);
-      color: var(--danger);
-      border: 1px solid rgba(239,68,68,.25);
+      background: var(--b-subtle);
+      color: var(--b);
+      border: 1px solid var(--b-border);
     }
     .btn-danger:hover:not(:disabled) {
-      background: var(--danger);
-      color: #fff;
+      transform: translateY(-5px) scale(1.01);
+      background: var(--b);
+      color: var(--bg2);
+      box-shadow: var(--shadow-md), 0 8px 24px var(--b-glow);
     }
 
     /* ── Status Badge ── */
@@ -148,10 +171,10 @@
       align-items: center;
       gap: 7px;
       padding: 5px 13px;
-      background: rgba(201,160,96,.12);
-      color: var(--success);
-      border: 1px solid rgba(201,160,96,.3);
-      border-radius: 100px;
+      background: var(--accent-subtle);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      border-radius: var(--radius-pill);
       font-size: .75rem;
       font-weight: 700;
     }
@@ -174,8 +197,8 @@
       margin: 16px 0;
     }
     .stat {
-      background: var(--card2);
-      border-radius: 10px;
+      background: var(--bg2);
+      border-radius: var(--radius-md);
       padding: 16px;
       text-align: center;
     }
@@ -187,36 +210,36 @@
     }
     .stat-label {
       font-size: .72rem;
-      color: var(--text-dim);
+      color: var(--muted);
       margin-top: 5px;
     }
 
     /* ── Progress bar ── */
     .prog-track {
-      background: var(--card2);
-      border-radius: 100px;
+      background: var(--bg2);
+      border-radius: var(--radius-pill);
       height: 9px;
       overflow: hidden;
       margin-bottom: 8px;
     }
     .prog-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--primary), #e09090);
-      border-radius: 100px;
+      background: linear-gradient(90deg, var(--a), var(--b));
+      border-radius: var(--radius-pill);
       transition: width .6s ease;
       min-width: 0;
     }
     .prog-text {
       font-size: .75rem;
-      color: var(--text-dim);
+      color: var(--muted);
       text-align: center;
       margin-bottom: 20px;
     }
 
     /* ── QR ── */
     .qr-box {
-      background: var(--card2);
-      border-radius: 12px;
+      background: var(--bg2);
+      border-radius: var(--radius-md);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -226,13 +249,13 @@
     }
     .qr-frame {
       background: #fff;
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       padding: 10px;
       line-height: 0;
     }
     .qr-url-text {
       font-size: .72rem;
-      color: var(--text-dim);
+      color: var(--muted);
       word-break: break-all;
       text-align: center;
       line-height: 1.5;
@@ -253,10 +276,10 @@
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(90px);
-      background: #1e293b;
+      background: var(--bg2);
       color: var(--text);
       padding: 11px 22px;
-      border-radius: 100px;
+      border-radius: var(--radius-pill);
       font-size: .88rem;
       font-weight: 600;
       z-index: 999;
@@ -264,9 +287,9 @@
       border: 1px solid var(--border);
       white-space: nowrap;
     }
-    .toast.show          { transform: translateX(-50%) translateY(0); }
-    .toast.success       { border-color: rgba(16,185,129,.5); }
-    .toast.error         { border-color: rgba(239,68,68,.5); }
+    .toast.show    { transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: var(--accent); }
+    .toast.error   { border-color: var(--b); }
 
     /* ── Util ── */
     .hidden { display: none !important; }
@@ -282,7 +305,7 @@
   </div>
 
   <!-- Loading -->
-  <div class="card" id="view-loading" style="text-align:center;padding:40px;color:var(--text-dim);">
+  <div class="card" id="view-loading" style="text-align:center;padding:40px;color:var(--muted);">
     불러오는 중…
   </div>
 
@@ -305,7 +328,7 @@
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
         <span class="badge-active"><span class="dot"></span>세션 진행 중</span>
-        <span style="font-size:.75rem;color:var(--text-dim);" id="session-time"></span>
+        <span style="font-size:.75rem;color:var(--muted);" id="session-time"></span>
       </div>
 
       <div class="stats-row">
