@@ -304,7 +304,7 @@
       color: var(--a);
       text-shadow: 0 0 40px rgba(249,168,34,.4), 0 4px 30px rgba(0,0,0,.25);
       filter: blur(1px);
-      animation: slotSpin .1s linear infinite;
+      animation: slotSpin .05s linear infinite;
     }
     @keyframes slotSpin {
       0%   { opacity: .9; transform: scale(1); }
@@ -334,7 +334,7 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       filter: drop-shadow(0 6px 32px rgba(249,168,34,.35));
-      animation: resultReveal .8s cubic-bezier(.34,1.56,.64,1) both;
+      animation: resultReveal .4s cubic-bezier(.34,1.56,.64,1) both;
     }
     @keyframes resultReveal {
       0%   { transform: scale(.3) rotateX(20deg); opacity: 0; }
@@ -546,7 +546,7 @@
 
     // 슬롯머신 시작
     setState('drawing');
-    const MIN_ANIM_MS = 1000;
+    const MIN_ANIM_MS = 500;
     const animStart   = Date.now();
     const slotEl      = document.getElementById('slot-num');
     slotEl.style.filter = '';
@@ -574,7 +574,7 @@
       clearInterval(animTimer);
 
       // 감속 시퀀스
-      const decelSteps = [80, 120, 180, 260, 400];
+      const decelSteps = [40, 60, 90, 130, 200];
       for (let i = 0; i < decelSteps.length; i++) {
         await new Promise(r => setTimeout(r, decelSteps[i]));
         if (i < decelSteps.length - 1) {
