@@ -35,6 +35,10 @@
       --shadow-sm:   0 2px 8px rgba(0,0,0,.25);
       --shadow-md:   0 4px 16px rgba(0,0,0,.35);
       --shadow-lg:   0 8px 32px rgba(0,0,0,.45);
+      --glass-shine:   rgba(250,236,182,.04);
+      --glow-gold:     0 0 40px rgba(249,168,34,.25);
+      --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
+      --ease-out-back: cubic-bezier(0.34,1.56,.64,1);
     }
 
     body {
@@ -46,10 +50,22 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: var(--bg);
+      background: radial-gradient(ellipse at 50% 40%, #6B3535 0%, var(--bg) 50%, var(--bg2) 100%);
       color: var(--text);
       padding: 24px 20px;
       overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(249,168,34,.06) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(232,135,74,.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     /* ── Floating title ── */
@@ -58,12 +74,33 @@
       top: 20px;
       left: 0; right: 0;
       text-align: center;
-      font-size: .78rem;
+      font-size: .82rem;
       font-weight: 700;
       letter-spacing: .12em;
       text-transform: uppercase;
-      color: var(--muted);
+      background: linear-gradient(135deg, var(--a), var(--b));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       pointer-events: none;
+      z-index: 10;
+      animation: fadeDown .6s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    .app-label::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--a), var(--b));
+      border-radius: 1px;
+      margin: 8px auto 0;
+      opacity: .5;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* ── Glass card ── */
@@ -73,37 +110,128 @@
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 44px 32px;
+      padding: 48px 36px;
       width: 100%;
-      max-width: 340px;
+      max-width: 380px;
       text-align: center;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-shine);
+      animation: cardEnter .7s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, rgba(250,236,182,.03), transparent);
+      pointer-events: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--a), transparent);
+      border-radius: 0 0 2px 2px;
+    }
+
+    @keyframes cardEnter {
+      from { opacity: 0; transform: scale(0.95) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     /* ── States ── */
     .state { display: none; }
-    .state.active { display: block; }
+    .state.active {
+      display: block;
+      animation: stateEnter .4s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes stateEnter {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     /* Loading */
     .spinner {
-      width: 46px; height: 46px;
-      border: 4px solid var(--border-subtle);
+      width: 56px; height: 56px;
+      border: 3px solid var(--border-subtle);
       border-top-color: var(--a);
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin: 0 auto;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    .spinner::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 2px solid transparent;
+      border-top-color: var(--b);
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite reverse;
+      opacity: .5;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    .loading-text {
+      font-size: .85rem;
+      color: var(--muted);
+      animation: breathe 2s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { opacity: .5; }
+      50%      { opacity: 1; }
+    }
+
     /* Idle / Ready */
-    .state-icon  { font-size: 3.6rem; margin-bottom: 14px; line-height: 1; }
-    .state-title { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
-    .state-desc  { font-size: .88rem; color: var(--muted); margin-bottom: 32px; line-height: 1.5; }
+    .state-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      width: 80px; height: 80px;
+      background: rgba(249,168,34,.08);
+      border: 1px solid rgba(249,168,34,.15);
+      border-radius: 50%;
+      font-size: 2.8rem;
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+    @keyframes iconFloat {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    .state-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, var(--text), var(--a));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .state-desc {
+      font-size: .88rem;
+      color: var(--muted);
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
 
     /* Draw button */
     .btn-draw {
       width: 100%;
       padding: 18px 24px;
-      background: var(--a);
+      background: linear-gradient(135deg, var(--a), var(--accent));
       color: var(--bg2);
       border: none;
       border-radius: var(--radius-md);
@@ -112,10 +240,24 @@
       cursor: pointer;
       transition: transform 80ms, box-shadow 150ms;
       animation: pulse 2.4s ease-in-out infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-draw::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%       { left: -100%; }
+      50%,100% { left: 100%; }
     }
     @keyframes pulse {
-      0%,100% { box-shadow: 0 0 0 0 var(--a-glow); }
-      50%      { box-shadow: 0 0 0 14px var(--a-glow-0); }
+      0%,100% { box-shadow: 0 0 0 0 var(--a-glow), var(--shadow-md); }
+      50%      { box-shadow: 0 0 0 14px var(--a-glow-0), var(--shadow-lg), 0 0 40px rgba(249,168,34,.25); }
     }
     .btn-draw:hover:not(:disabled) {
       transform: translateY(-5px) scale(1.01);
@@ -137,6 +279,22 @@
       color: var(--muted);
       margin-bottom: 10px;
       letter-spacing: .06em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .slot-label::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--a);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: .3; }
     }
     .slot-number {
       font-size: clamp(80px, 28vw, 150px);
@@ -144,13 +302,16 @@
       line-height: 1;
       letter-spacing: -0.02em;
       color: var(--a);
-      text-shadow: 0 4px 30px rgba(0,0,0,.25);
-      opacity: .85;
-      animation: flicker .1s linear infinite;
+      text-shadow: 0 0 40px rgba(249,168,34,.4), 0 4px 30px rgba(0,0,0,.25);
+      filter: blur(1px);
+      animation: slotSpin .1s linear infinite;
     }
-    @keyframes flicker {
-      0%,100% { opacity: .85; }
-      50%      { opacity: .65; }
+    @keyframes slotSpin {
+      0%   { opacity: .9; transform: scale(1); }
+      25%  { opacity: .7; transform: scale(.98); }
+      50%  { opacity: .6; transform: scale(1.02); }
+      75%  { opacity: .8; transform: scale(.99); }
+      100% { opacity: .9; transform: scale(1); }
     }
 
     /* Result */
@@ -161,30 +322,83 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       margin-bottom: 8px;
+      animation: fadeIn .3s ease both;
     }
     .result-number {
       font-size: clamp(80px, 28vw, 160px);
       font-weight: 900;
       line-height: 1;
       letter-spacing: -0.02em;
-      color: var(--a);
-      text-shadow: 0 6px 32px rgba(0,0,0,.3);
-      animation: pop .5s cubic-bezier(.34,1.56,.64,1) both;
+      background: linear-gradient(135deg, var(--a), var(--b));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 6px 32px rgba(249,168,34,.35));
+      animation: resultReveal .8s cubic-bezier(.34,1.56,.64,1) both;
     }
-    @keyframes pop {
-      from { transform: scale(.4); opacity: 0; }
-      to   { transform: scale(1);  opacity: 1; }
+    @keyframes resultReveal {
+      0%   { transform: scale(.3) rotateX(20deg); opacity: 0; }
+      50%  { transform: scale(1.1);               opacity: 1; }
+      100% { transform: scale(1) rotateX(0deg);   opacity: 1; }
+    }
+    #s-result { position: relative; }
+    #s-result::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(249,168,34,.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%,100% { opacity: .5; transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: 1;  transform: translate(-50%,-50%) scale(1.2); }
     }
     .result-tag {
       margin-top: 14px;
-      font-size: .92rem;
+      font-size: .88rem;
+      font-weight: 600;
       color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent-border);
+      border-radius: var(--radius-pill);
+      animation: fadeIn .5s .4s ease both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* Closed / No-session */
-    .closed-icon  { font-size: 3.5rem; margin-bottom: 16px; }
-    .closed-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
-    .closed-desc  { font-size: .88rem; color: var(--muted); line-height: 1.5; }
+    .closed-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      width: 80px; height: 80px;
+      background: rgba(122,64,64,.15);
+      border: 1px solid rgba(122,64,64,.25);
+      border-radius: 50%;
+      font-size: 2.8rem;
+    }
+    .closed-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--text), var(--muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .closed-desc { font-size: .88rem; color: var(--muted); line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -196,6 +410,7 @@
   <!-- Loading -->
   <div class="state active" id="s-loading">
     <div class="spinner"></div>
+    <div class="loading-text">잠시만요...</div>
   </div>
 
   <!-- Ready to draw -->
@@ -334,9 +549,11 @@
     const MIN_ANIM_MS = 1000;
     const animStart   = Date.now();
     const slotEl      = document.getElementById('slot-num');
+    slotEl.style.filter = '';
+    slotEl.style.animation = '';
 
     const animTimer = setInterval(() => {
-      slotEl.textContent = Math.floor(Math.random() * totalCount) + 1;
+      slotEl.textContent = Math.floor(Math.random() * Math.max(1, totalCount)) + 1;
     }, 55);
 
     try {
@@ -356,11 +573,23 @@
 
       clearInterval(animTimer);
 
+      // 감속 시퀀스
+      const decelSteps = [80, 120, 180, 260, 400];
+      for (let i = 0; i < decelSteps.length; i++) {
+        await new Promise(r => setTimeout(r, decelSteps[i]));
+        if (i < decelSteps.length - 1) {
+          slotEl.textContent = Math.floor(Math.random() * totalCount) + 1;
+        } else {
+          if (!data.closed) slotEl.textContent = data.number;
+        }
+      }
       if (data.closed) {
         setState('closed');
         return;
       }
 
+      slotEl.style.filter = 'none';
+      slotEl.style.animation = 'none';
       saveDraw(data.session_id, data.number);
       showResult(data.number, true);
 
@@ -384,26 +613,37 @@
     if (withConfetti && typeof confetti === 'function') {
       // 첫 번째 터짐
       confetti({
-        particleCount: 180,
-        spread: 80,
+        particleCount: 200,
+        spread: 90,
         origin: { y: 0.55 },
         colors: ['#F9A822', '#E8874A', '#FAECB6', '#C87A40', '#F9C84C'],
+        gravity: .8,
       });
-      // 0.4초 후 두 번째 터짐
+      // 두 번째 터짐
       setTimeout(() => confetti({
-        particleCount: 80,
+        particleCount: 100,
         angle:        60,
-        spread:       55,
+        spread:       60,
         origin:       { x: 0, y: 0.6 },
         colors:       ['#F9A822', '#E8874A', '#FAECB6', '#C87A40', '#F9C84C'],
-      }), 400);
+      }), 350);
+      // 세 번째 터짐
       setTimeout(() => confetti({
-        particleCount: 80,
+        particleCount: 100,
         angle:        120,
-        spread:       55,
+        spread:       60,
         origin:       { x: 1, y: 0.6 },
         colors:       ['#F9A822', '#E8874A', '#FAECB6', '#C87A40', '#F9C84C'],
-      }), 600);
+      }), 550);
+      // 네 번째: 중앙 스파클
+      setTimeout(() => confetti({
+        particleCount: 50,
+        spread:        360,
+        startVelocity: 15,
+        origin:        { x: .5, y: .5 },
+        colors:        ['#F9A822', '#FAECB6'],
+        scalar:        .6,
+      }), 800);
     }
   }
 
